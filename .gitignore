@@ -4,3 +4,6 @@
 .Ruserdata
 Input/2_outputs/*.dbf
 Input/purePine/*.dbf
+Input/2_outputs/*.dbf
+Input/purePine/*.dbf
+Input/purePine/*.shp
