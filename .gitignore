@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+Input/2_outputs/*.dbf
+Input/purePine/*.dbf
