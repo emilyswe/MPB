@@ -255,3 +255,60 @@ ggsave(
   height = 10,
   dpi = 300
 )
+
+
+
+########################
+########################
+########################
+######################## patch size calculation, code seems to be missing but found this in chat GPT convo, title MPB Covariates Jasper Plots need to check that it works 
+#added Feb 11 2025
+
+# Assign patch size based on treatment and dynamic buffer
+disturbances <- disturbances %>%
+  mutate(
+    RelevantArea = case_when(
+      treatment == "burn" & !is.na(BURNAREA150) ~ BURNAREA150,
+      treatment == "burn" & !is.na(BURNAREA300) ~ BURNAREA300,
+      treatment == "burn" & !is.na(BURNAREA500) ~ BURNAREA500,
+      treatment == "harvest" & !is.na(HARVESTAREA150) ~ HARVESTAREA150,
+      treatment == "harvest" & !is.na(HARVESTAREA300) ~ HARVESTAREA300,
+      treatment == "harvest" & !is.na(HARVESTAREA500) ~ HARVESTAREA500,
+      treatment == "standing" & !is.na(BEETLEAREA150) ~ BEETLEAREA150,
+      treatment == "standing" & !is.na(BEETLEAREA300) ~ BEETLEAREA300,
+      treatment == "standing" & !is.na(BEETLEAREA500) ~ BEETLEAREA500,
+      TRUE ~ NA_real_
+    )
+  )
+
+# Check for missing values and troubleshoot if needed
+print(disturbances %>% filter(is.na(RelevantArea)))
+
+# Create the histogram
+library(ggplot2)
+
+patch_size_plot <- ggplot(data = disturbances, aes(x = RelevantArea, fill = treatment)) +
+  geom_histogram(binwidth = 10000, position = "stack", color = "black", alpha = 0.7) +
+  scale_fill_manual(values = c("burn" = "red", "harvest" = "blue", "standing" = "forestgreen")) +
+  labs(
+    title = "Patch Size Distribution by Treatment (Dynamic Buffer)",
+    x = "Patch Area (square meters)",
+    y = "# of Sites",
+    fill = "Treatment Type"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12)
+  )
+
+# Save the plot
+ggsave(
+  filename = "/Users/Bronwyn/Documents/local-git/MPB/Output/patch_size_distribution_dynamic_buffer.jpeg",
+  plot = patch_size_plot,
+  width = 10,
+  height = 8,
+  dpi = 300
+)
+
