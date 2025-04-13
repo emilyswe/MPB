@@ -6,7 +6,7 @@
 library(tidyverse)
 
 # 1. Read in Bird Data (Site x Species Matrix)
-bird_data <- read.csv("/Users/Bronwyn/Documents/local-git/MPB/Output/01_MPB-bird-data-territoryA.csv")
+bird_data <- read.csv("Output/1-MPB-bird-data-territoryA.csv")
 
 # 2. Read in Covariate Data for Each Region
 jnp_cov <- read.csv("Output/3-jnp-disturbances-tsd.csv")  # Jasper sites
@@ -21,10 +21,11 @@ sab_bird_cov <- sab_cov %>%
   inner_join(bird_data, by = "location")  # Merge by location
 
 # 5. Save Final Datasets
-write.csv(jnp_bird_cov, "/Users/Bronwyn/Documents/local-git/MPB/Output/05_MPB_bird_covariates_JNP.csv", row.names = FALSE)
-write.csv(sab_bird_cov, "/Users/Bronwyn/Documents/local-git/MPB/Output/05_MPB_bird_covariates_SAB.csv", row.names = FALSE)
+write.csv(jnp_bird_cov, "/Users/Bronwyn/Documents/local-git/MPB/Output/05-mpb-jnp-dataset.csv", row.names = FALSE)
+write.csv(sab_bird_cov, "/Users/Bronwyn/Documents/local-git/MPB/Output/05-mpb-sab-dataset.csv", row.names = FALSE)
 
 # END OF SCRIPT
 
-jasperdat <- read.csv("Output/05_MPB_bird_covariates_JNP.csv")
-sabdat <- read.csv("Output/05_MPB_bird_covariates_SAB.csv")
+jasperdat <- read.csv("Output/05-mpb-jnp-dataset.csv")
+sabdat <- read.csv("Output/05-mpb-sab-dataset.csv")
+

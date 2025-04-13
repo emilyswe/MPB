@@ -54,21 +54,26 @@ mpb_filtered <- mpb_filtered %>%
   )
 
 # 6. Get Maximum Count Per Species Per Site
-mpb_max <- mpb_filtered %>%
+#mpb_max <- mpb_filtered %>%
+ # group_by(location, species_code) %>%
+  #summarise(max_count = max(individual_count, na.rm = TRUE), .groups = "drop")
+
+# 6. Get Mean Count Per Species Per Site (Rounded Up)
+mpb_mean <- mpb_filtered %>%
   group_by(location, species_code) %>%
-  summarise(max_count = max(individual_count, na.rm = TRUE), .groups = "drop")
+  summarise(mean_count = ceiling(mean(individual_count, na.rm = TRUE)), .groups = "drop")
 
 # 7. Convert to Wide Format (Site by Species Matrix)
-mpb_wide <- mpb_max %>%
-  pivot_wider(names_from = species_code, values_from = max_count, values_fill = 0)
+mpb_wide <- mpb_mean %>%
+  pivot_wider(names_from = species_code, values_from = mean_count, values_fill = 0)
 
 # 8. Save Final Output
-write.csv(mpb_wide, "Output/01_MPB_bird_data_wide.csv", row.names = FALSE)
+write.csv(mpb_wide, "Output/1-mpb-bird-data-mean-count-wide.csv", row.names = FALSE)
 
 #################################
 ################filter for territory type A species only
 
-birds <- read.csv("Output/01_MPB_bird_data_wide.csv")
+birds <- read.csv("Output/1-mpb-bird-data-mean-count-wide.csv")
 
 # Explore to determine which species to remove ----
 
@@ -78,7 +83,7 @@ birds <- read.csv("Output/01_MPB_bird_data_wide.csv")
 library(tidyverse)
 
 # 1. Read in Bird Data (Site x Species Matrix)
-birds <- read.csv("/Users/Bronwyn/Documents/local-git/MPB/Output/01_MPB_bird_data_wide.csv")
+birds <- read.csv("Output/1-mpb-bird-data-mean-count-wide.csv")
 
 # 2. Identify Species Columns (Four-Letter Uppercase Codes)
 species_columns <- grep("^[A-Z]{4}$", colnames(birds), value = TRUE)
@@ -103,8 +108,8 @@ species_to_remove <- c(
   # Loons & Marsh Birds
   "SACR",  
   # Misidentified / Non-Territorial Birds
-  "RUGR", "REDP", "PAWA", "NAWA", "MOWA", "SWSP", "BTNW", "FISP",  
-  "DUGR", "BAWW", "BLPW", "CAWA", "CONW", "NOPA", "GRSP", "RECR" 
+  "RUGR", "PAWA", "NAWA", "MOWA", "SWSP", 
+  "DUGR", "BAWW", "BLPW", "NOPA"
 )
 
 # 5. Remove Non-Type A Species (Drop Columns)
@@ -119,5 +124,5 @@ final_species_list <- data.frame(species = final_species_columns)
 print(final_species_list)
 
 # 7. Save the Filtered Dataset
-write.csv(birds_filtered, "/Users/Bronwyn/Documents/local-git/MPB/Output/01_MPB-bird-data-territoryA.csv", row.names = FALSE)
+write.csv(birds_filtered, "/Users/Bronwyn/Documents/local-git/MPB/Output/1-MPB-bird-data-territoryA.csv", row.names = FALSE)
 
